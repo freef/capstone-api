@@ -8,7 +8,6 @@ const cors = require('cors')
 const exampleRoutes = require('./app/routes/example_routes')
 const userRoutes = require('./app/routes/user_routes')
 const drawRoutes = require('./app/routes/draw_routes')
-const uploadRoutes = require('./app/routes/upload_routes')
 const commentRoutes = require('./app/routes/comment_routes')
 
 // require error handling middleware
