@@ -34,7 +34,7 @@ drawSchema.virtual('likeTotal').get(function () {
 drawSchema.virtual('comments', {
   ref: 'Comment',
   localField: '_id',
-  foreignField: 'blog'
+  foreignField: 'drawing'
 })
 
 drawSchema.virtual('username', {

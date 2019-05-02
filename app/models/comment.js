@@ -1,13 +1,17 @@
 const mongoose = require('mongoose')
 
 const commentSchema = new mongoose.Schema({
-  text: {
+  title: {
     type: String,
     required: true
   },
-  blog: {
+  drawing: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Draw',
+    required: true
+  },
+  img: {
+    type: String,
     required: true
   },
   owner: {
