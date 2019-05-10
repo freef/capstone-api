@@ -51,16 +51,16 @@ router.patch('/comments/:id', requireToken, removeBlanks, (req, res, next) => {
   delete req.body.data.owner
   Comment.findById(req.params.id)
     .then(handle404)
-    .then(comment => {
-      const commentObj = comment.toObject()
-      const updateCommenting = {...commentObj}
-      requireOwnership(req, commentObj)
+    .then(draw => {
+      const drawObj = draw.toObject()
+      const updateDrawing = {...drawObj}
+      requireOwnership(req, drawObj)
       promiseS3Upload(req.body.data.img)
         .then(awsResponse => {
-          updateCommenting.img = awsResponse.Location
-          updateCommenting.imagekey = awsResponse.Key
-          updateCommenting.title = req.body.data.title
-          return comment.update(updateCommenting)
+          updateDrawing.img = awsResponse.Location
+          updateDrawing.imagekey = awsResponse.Key
+          updateDrawing.title = req.body.data.title
+          return draw.update(updateDrawing)
         })
         .then(() => res.sendStatus(204))
         .catch(next)
@@ -78,6 +78,28 @@ router.delete('/comments/:id', requireToken, (req, res, next) => {
       comment.remove()
     })
     .then(() => res.sendStatus(204))
+    .catch(next)
+})
+
+router.patch('/likescomment/:id', requireToken, removeBlanks, (req, res, next) => {
+  const liker = req.body.user._id
+  delete req.body
+  console.log(req.params.id)
+  Comment.findById(req.params.id)
+    .then(handle404)
+    .then(draw => {
+      const hasLiked = draw.likes.some(like => {
+        return like.toString() === liker
+      })
+      if (hasLiked) {
+        return draw.update({$pull: {likes: liker}})
+      } else {
+        return draw.update({$push: {likes: liker}})
+      }
+    })
+    .then(draw => {
+      res.sendStatus(204)
+    })
     .catch(next)
 })
 
